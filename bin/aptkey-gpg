@@ -1,0 +1,58 @@
+#!/bin/bash
+
+
+DEBUG='n'
+
+KEY_DEPOT="/etc/apt/trusted.gpg.d"
+TEMP="/tmp"
+
+if [[ "${DEBUG}" =~ ^(y|Y|s|S)$ ]] ; then
+    KEY_DEPOT="$(xdg-user-dir DESKTOP)"
+fi
+
+
+function running()
+{
+    IN_FILE=$(basename -- "${URL}")
+    echo $IN_FILE
+    FILE_NAME="${IN_FILE%.*}"
+    echo -e "${URL}"
+    if [[  ${URL} =~ ^http://.+ ]]  || [[  ${URL} =~ ^ftp://.+ ]]  ; then
+        wget -qO - "${URL}" | sudo gpg --dearmor -vo ${KEY_DEPOT}/${FILE_NAME}.gpg || echo -e "Error adquiring the key"
+    elif [[ ${URL} =~ ^file:// ]] || [[ -e ${URL} ]] ; then
+        cat "${URL}" | sudo gpg --dearmor -vo ${KEY_DEPOT}/${FILE_NAME}.gpg || echo -e "Error adquiring the key"
+    else
+        echo "Not valid URL or file doesn't exists"
+    fi
+    exit 0
+
+}
+
+function help_message(){
+
+    cat <<EOF
+    
+$( basename ${0} ) syntaxi: $( basename ${0} ) [options] URL
+  
+  URL       Must be http, ftp or a path
+  
+  Options:
+    -h      Show this message
+    
+    
+EOF
+}
+
+if [[ $1 = "-h" ]] ; then
+    help_message
+    exit 0
+fi
+
+URL="${1}"
+running "${URL}"
+
+
+
+
+
+
