@@ -3,7 +3,7 @@
 # Version: 0.4
 
 KEY_DEPOT="/etc/apt/trusted.gpg.d"
-TEMP="/tmp"
+#TEMP="/tmp"
 
 PRIVIL="sudo"
 
