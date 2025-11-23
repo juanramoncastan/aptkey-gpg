@@ -1,15 +1,11 @@
 #!/bin/bash
 
-
-DEBUG='n'
+# Version: 0.4
 
 KEY_DEPOT="/etc/apt/trusted.gpg.d"
 TEMP="/tmp"
 
-if [[ "${DEBUG}" =~ ^(y|Y|s|S)$ ]] ; then
-    KEY_DEPOT="$(xdg-user-dir DESKTOP)"
-fi
-
+PRIVIL="sudo"
 
 function running()
 {
@@ -18,14 +14,13 @@ function running()
     FILE_NAME="${IN_FILE%.*}"
     echo -e "${URL}"
     if [[  ${URL} =~ ^http://.+ ]]  || [[  ${URL} =~ ^ftp://.+ ]]  ; then
-        wget -qO - "${URL}" | sudo gpg --dearmor -vo ${KEY_DEPOT}/${FILE_NAME}.gpg || echo -e "Error adquiring the key"
+        wget -qO - "${URL}" | ${PRIVIL} gpg --dearmor -vo ${KEY_DEPOT}/${FILE_NAME}.gpg || echo -e "Error adquiring the key"
     elif [[ ${URL} =~ ^file:// ]] || [[ -e ${URL} ]] ; then
         cat "${URL}" | sudo gpg --dearmor -vo ${KEY_DEPOT}/${FILE_NAME}.gpg || echo -e "Error adquiring the key"
     else
         echo "Not valid URL or file doesn't exists"
     fi
     exit 0
-
 }
 
 function help_message(){
@@ -37,20 +32,48 @@ $( basename ${0} ) syntaxi: $( basename ${0} ) [options] URL
   URL       Must be http, ftp or a path
   
   Options:
+    -D      Debug option. Normal user and output file in the working directory
     -h      Show this message
-    
-    
+     
 EOF
 }
 
-if [[ $1 = "-h" ]] ; then
-    help_message
-    exit 0
+
+OPTIONS=$(getopt  -o "hD" -n '$0' -- "$@")
+
+if [ $? != 0 ] ; then
+  exit 1 ;
 fi
 
-URL="${1}"
-running "${URL}"
+eval set -- "$OPTIONS"
 
+while true ; do 
+    case $1 in 
+            -h)
+                shift
+                help_message
+                exit 0
+                ;;
+            -D)
+                shift
+                PRIVIL=""
+                #KEY_DEPOT="$(xdg-user-dir DESKTOP)"
+                KEY_DEPOT="./"
+                ;;
+            --)
+                shift
+                URL="${1}"
+                running "${URL}"
+                break
+                ;;
+            *)
+                shift
+                exit 1
+                ;;
+    esac
+done
+
+exit 0
 
 
 
