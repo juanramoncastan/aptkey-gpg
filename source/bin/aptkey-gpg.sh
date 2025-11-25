@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 1.0
+# Version: 1.1
 
 ############################################
 ## Imported file must be a public key
@@ -10,8 +10,7 @@
 
 KEY_DEPOT="/etc/apt/trusted.gpg.d"
 PRIVIL="sudo"
-GPG_TEST="gpg --dearmor --dry-run"
-GPG="gpg --dearmor -vo"
+
 
 function running()
 {
@@ -20,21 +19,22 @@ function running()
     local input_key_file=$(basename -- "${url_origen}")
     local key_name="${input_key_file%.*}"
     local temporal_key_file="/tmp/${input_key_file}"
-    ## Show info
+    local gpg_test="gpg --dearmor --dry-run"
+    local gpg_command="gpg --dearmor -vo"
+
     echo -e "Getting $input_key_file from:"
     echo -e "${url_origen}"
     
     if [[  ${url_origen} =~ ^http://.+ ]] || [[  ${url_origen} =~ ^ftp://.+ ]] ; then
-        ##  Download public key file
         wget -qO "${temporal_key_file}" "${url_origen}"
     elif [[ -e ${url_origen} ]]; then
         cp ${url_origen} ${temporal_key_file}
     fi
     
-    if [[ -z $(cat "${temporal_key_file}" | ${GPG_TEST}  1> /dev/null) ]]; then
+    if [[ -z $(cat "${temporal_key_file}" | ${gpg_test}  1> /dev/null) ]]; then
         echo ""
         (cat "${temporal_key_file}" \
-                            | ${PRIVIL} ${GPG} ${KEY_DEPOT}/${key_name}.gpg \
+                            | ${PRIVIL} ${gpg_command} ${KEY_DEPOT}/${key_name}.gpg \
                             && rm "${temporal_key_file}" \
                             && echo -e "\n${key_name}.gpg into ${KEY_DEPOT}") \
                             || echo -e "Error adquiring the key"
