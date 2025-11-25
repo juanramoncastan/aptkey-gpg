@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Version: 1.1
+# aptkey-gpg.sh 
+# Version: 1.1.1
+# Author: monon
 
-############################################
-## Imported file must be a public key
-## 
-
-############################################
 
 KEY_DEPOT="/etc/apt/trusted.gpg.d"
 PRIVIL="sudo"

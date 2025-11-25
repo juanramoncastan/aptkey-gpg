@@ -1,3 +1,4 @@
+# ----------------------------------------------------------------------
 #
 #  Copyright (C) 2013 Juan Ramon Castan Guillen <juanramoncastan@yahoo.es>
 #
@@ -14,23 +15,22 @@
 # ----------------------------------------------------------------------
 
 # ###########      aptkey-gpg Makefile     ###########################
-# Version: 1.1
+# Version: 1.1.1
 
 #####  BUILD = "../package-name_version_architecture" given from "debianizador" script
+PROJECT=apkkey-gpg
 PREFIX = /usr
 BIN_PATH = /bin
 
-
 test:
+	@ echo Makefile: $(PROJECT)
 	@ echo User: $(USER)
 
-
 install: test
-	@ echo "install: binary "
-	mkdir -p $(BUILD)$(PREFIX)$(BIN_PATH)
-	cp .$(BIN_PATH)/* $(BUILD)$(PREFIX)$(BIN_PATH)
-	@ echo
-
+ifneq ($(PREFIX),)
+	@ mkdir -p $(BUILD)$(PREFIX)$(BIN_PATH)
+	@ cp .$(BIN_PATH)/* $(BUILD)$(PREFIX)$(BIN_PATH)
+endif
 	
 uninstall: test
 	@ echo
