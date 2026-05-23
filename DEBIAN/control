@@ -1,0 +1,8 @@
+Package: aptkey-gpg
+Version: 1.1.1
+Section: admin
+Priority: optional
+Architecture: all
+Depends: 
+Maintainer: Juan Ramon Castan
+Description: Key importer for apt
