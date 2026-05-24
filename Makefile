@@ -15,10 +15,10 @@
 # ----------------------------------------------------------------------
 
 # ###########      aptkey-gpg Makefile     ###########################
-# Version: 1.1.1
+# Version: 1.1.2
 # BUILD = "../package-name_version_architecture" given from "debianizador" app
 
-BUILD = ""
+BUILD =
 PROJECT=apkkey-gpg
 PREFIX = /usr
 BIN_PATH = /bin

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # aptkey-gpg.sh 
-# Version: 1.1.1
+# Version: 1.1.2
 # Author: monon
 
 
