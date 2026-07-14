@@ -11,11 +11,11 @@ PRIVIL="sudo"
 
 function running()
 {
-    local temporal_key_file=""
+    local tmp_key_file=""
     local url_origen=${1} ## url_origen can be a "file://", "http://" or "ftp://"
     local input_key_file=$(basename -- "${url_origen}")
     local key_name="${input_key_file%.*}"
-    local temporal_key_file="/tmp/${input_key_file}"
+    local tmp_key_file="/tmp/${input_key_file}"
     local gpg_test="gpg --dearmor --dry-run"
     local gpg_command="gpg --dearmor -vo"
 
@@ -23,16 +23,16 @@ function running()
     echo -e "${url_origen}"
     
     if [[  ${url_origen} =~ ^http://.+ ]] || [[  ${url_origen} =~ ^ftp://.+ ]] ; then
-        wget -qO "${temporal_key_file}" "${url_origen}"
+        wget -qO "${tmp_key_file}" "${url_origen}"
     elif [[ -e ${url_origen} ]]; then
-        cp ${url_origen} ${temporal_key_file}
+        cp ${url_origen} ${tmp_key_file}
     fi
     
-    if [[ -z $(cat "${temporal_key_file}" | ${gpg_test}  1> /dev/null) ]]; then
+    if [[ -z $(cat "${tmp_key_file}" | ${gpg_test}  1> /dev/null) ]]; then
         echo ""
-        (cat "${temporal_key_file}" \
+        (cat "${tmp_key_file}" \
                             | ${PRIVIL} ${gpg_command} ${KEY_DEPOT}/${key_name}.gpg \
-                            && rm "${temporal_key_file}" \
+                            && rm "${tmp_key_file}" \
                             && echo -e "\n${key_name}.gpg into ${KEY_DEPOT}") \
                             || echo -e "Error adquiring the key"
     else
