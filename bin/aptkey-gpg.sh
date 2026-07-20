@@ -19,6 +19,11 @@ function running()
     local gpg_test="gpg --dearmor --dry-run"
     local gpg_command="gpg --dearmor -vo"
 
+    if [[ ${url_origen} = "" ]] ; then
+        echo "No hay ningun archivo"
+        exit 1
+    fi
+    
     echo -e "Getting $input_key_file from:"
     echo -e "${url_origen}"
     
