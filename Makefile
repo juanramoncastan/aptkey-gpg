@@ -18,10 +18,12 @@
 # Version: 1.1.2
 # BUILD = "../package-name_version_architecture" given from "debianizador" app
 
-BUILD =
+BUILD = 
+SOURCE = .
 PROJECT=apkkey-gpg
 PREFIX = /usr
 BIN_PATH = /bin
+
 
 test:
 	@ echo Makefile: $(PROJECT)
@@ -30,9 +32,10 @@ test:
 install: test
 ifneq ($(PREFIX),)
 	@ mkdir -p $(BUILD)$(PREFIX)$(BIN_PATH)
-	@ cp .$(BIN_PATH)/* $(BUILD)$(PREFIX)$(BIN_PATH)
+	@ cp ${SOURCE}$(BIN_PATH)/* $(BUILD)$(PREFIX)$(BIN_PATH)
 endif
-	
+
+
 uninstall: test
 	@ echo
 	@ echo "uninstall: binaries"
